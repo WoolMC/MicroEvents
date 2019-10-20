@@ -1,5 +1,8 @@
-package io.github.woolmc.events;
+package io.github.microevents.events;
 
+/**
+ * the priority of a listener
+ */
 public enum Priority {
 
 	/**
@@ -43,10 +46,20 @@ public enum Priority {
 		this.flag = ordinal();
 	}
 
+	/**
+	 * signs the value onto the integer
+	 * @param val the base int
+	 * @return the signed value
+	 */
 	public int sign(int val) {
 		return val | flag;
 	}
 
+	/**
+	 * retrieve the priority that signed the value
+	 * @param val the signed int
+	 * @return the priority
+	 */
 	public static Priority getFromFlag(int val) {
 		return ORDINALS[val & 7];
 	}

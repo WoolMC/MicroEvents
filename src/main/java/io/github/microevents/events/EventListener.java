@@ -1,4 +1,4 @@
-package io.github.woolmc.events;
+package io.github.microevents.events;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * An annotation used by event managers to autogenerate listeners for methods
+ * An annotation used by event managers to auto-generate listeners for methods
+ * by annotating a method with this
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

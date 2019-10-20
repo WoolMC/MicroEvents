@@ -15,18 +15,15 @@ configurations {
 
 
 dependencies {
+    // used for faster reflective method invocation for EventListener
     // https://github.com/Hervian/lambda-factory
     compile name: "lambda-factory-2.0.1"
     extraLibs name: "lambda-factory-2.0.1"
 
+    // faster data structures (Short2Object & Object2Short maps in MicroEventManager)
     // https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
     compile "it.unimi.dsi:fastutil:8.3.0"
     extraLibs "it.unimi.dsi:fastutil:8.3.0"
-
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile 'com.google.guava:guava:28.1-jre'
-    extraLibs 'com.google.guava:guava:28.1-jre'
-
 }
 
 jar {

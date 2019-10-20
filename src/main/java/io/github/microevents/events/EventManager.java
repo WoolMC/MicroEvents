@@ -1,18 +1,23 @@
-package io.github.woolmc.events;
+package io.github.microevents.events;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.List;
 
+
+/**
+ * An event handler manages the registering of listeners, and invocation of events
+ */
 public interface EventManager {
 	/**
 	 * Registers a new listener to the event handler, not thread-safe
 	 * @param eventClass the class of the event
 	 * @param listener the listener
 	 * @param priority the priority of the listener
-	 * @param callSupers whether or not the listener should be registered for super classes of the event
+	 * @param callSubs whether or not the listener should be registered for sub classes of the event
 	 * @param <T> the type of event
 	 * @return the listener id
 	 */
-	<T extends Event> int registerListener(Class<T> eventClass, Listener<T> listener, Priority priority, boolean callSupers);
+	<T extends Event> int registerListener(Class<T> eventClass, Listener<T> listener, Priority priority, boolean callSubs);
 
 	/**
 	 * removes the listener from the event handler, not thread-safe
@@ -42,10 +47,18 @@ public interface EventManager {
 
 
 	/**
-	 * registers all the eventlistener annotated methods of the object
+	 * registers all the EventListener annotated methods of the object
 	 * @see EventListener
 	 * @param object the instance
 	 * @return the ids of all the created listeners
 	 */
-	List<Integer> registerEventListeners(Object object);
+	IntList registerEventListeners(Object object);
+
+	/**
+	 * registers all the <b>declared</b> static EventListener annotated methods of a class
+	 * @param classOf the class to check for
+	 * @return the ids of all the created listeners
+	 * @see Class#getDeclaredMethods()
+	 */
+	IntList registerStaticEventListeners(Class<?> classOf);
 }

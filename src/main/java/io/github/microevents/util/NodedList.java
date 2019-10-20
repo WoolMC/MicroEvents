@@ -1,20 +1,33 @@
-package io.github.woolmc.util;
+package io.github.microevents.util;
 
 import java.util.AbstractList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * an immutable list of lists :P
- * @param <E>
+ * @param <E> the stored type
  */
 public class NodedList<E> extends AbstractList<E> {
 
-	private final List<List<E>> combo;
-	private final int size;
+	// the references to all of the lists
+	final List<List<E>> combo;
 
+	// the total size of all of the lists
+	final int size;
+
+	/**
+	 * creates a new NodedList from the lists provided
+	 * @param combo
+	 */
 	public NodedList(List<List<E>> combo) {
 		this.combo = combo;
-		size = combo.stream().mapToInt(List::size).sum();
+		int sum = 0;
+		for (List<E> es : combo) {
+			int i = es.size();
+			sum += i;
+		}
+		size = sum;
 	}
 
 
@@ -29,5 +42,10 @@ public class NodedList<E> extends AbstractList<E> {
 	@Override
 	public int size() {
 		return size;
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new NodedListIterator<>(this);
 	}
 }
