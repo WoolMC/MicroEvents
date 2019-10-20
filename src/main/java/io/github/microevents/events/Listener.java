@@ -9,7 +9,12 @@ import java.util.function.Consumer;
 public interface Listener<E extends Event> extends Consumer<E> {
 	@Override
 	default void accept(E e) {
-		listen(e);
+		try {
+			listen(e);
+		} catch (Throwable t) {
+			System.out.println(getClass()+" threw an exception!");
+			t.printStackTrace();
+		}
 	}
 
 	/**

@@ -48,10 +48,10 @@ public class MicroEventHandler<E extends Event> implements EventHandler<E> {
 			if (event instanceof Cancellable) {
 				for (IntPair<Listener<E>> pair : listeners[priority])
 					if (((Cancellable) event).isCancelled() && obeyCancelled) break;
-					else if (!sub || subs(pair.b)) pair.a.listen(event);
+					else if (!sub || subs(pair.b)) pair.a.accept(event);
 				return ((Cancellable) event).isCancelled();
 			} else for (IntPair<Listener<E>> pair : listeners[priority])
-				pair.a.listen(event);
+				pair.a.accept(event);
 		return false;
 	}
 
