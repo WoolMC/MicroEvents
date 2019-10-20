@@ -39,7 +39,7 @@ public class MicroEventManager implements EventManager {
 	private IDHolder listenerIDHolder = new IDHolder(MAX_LISTENERS);
 
 	// map of the class of the events to its handler
-	private final Map<Class<? extends Event>, EventHandler> listeners = new HashMap<>();
+	private final Map<Class<? extends Event>, EventHandler> listeners = new Object2ObjectOpenHashMap<>();
 
 	// map of event class to event key for generating listener ids
 	private final Object2ShortMap<Class<? extends Event>> eventKeys = new Object2ShortOpenHashMap<>();
@@ -93,7 +93,7 @@ public class MicroEventManager implements EventManager {
 	/**
 	 * keep a cache of the super classes to avoid unneeded reflection calls
 	 */
-	protected Map<Class<? extends Event>, List<Class<? extends Event>>> eventSubcache = new HashMap<>();
+	protected Map<Class<? extends Event>, List<Class<? extends Event>>> eventSubcache = new Object2ObjectOpenHashMap<>();
 
 	@Override
 	public <T extends Event> void invoke(T event) {

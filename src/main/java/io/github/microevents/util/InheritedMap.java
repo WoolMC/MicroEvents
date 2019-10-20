@@ -1,5 +1,7 @@
 package io.github.microevents.util;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.*;
 import java.util.function.Function;
@@ -11,9 +13,9 @@ import java.util.function.Function;
  */
 public class InheritedMap<P, O> {
 	// a map of the classes to their attributes
-	private final Map<Class<? extends P>, List<O>> attributes = new HashMap<>();
+	private final Map<Class<? extends P>, List<O>> attributes = new Object2ObjectOpenHashMap<>();
 	// a map of classes to their and inherited attributes
-	private final Map<Class<? extends P>, NodedList<O>> cache = new HashMap<>();
+	private final Map<Class<? extends P>, NodedList<O>> cache = new Object2ObjectOpenHashMap<>();
 	// the parent type
 	private final Class<P> parentType;
 	// a class to attributes converter
