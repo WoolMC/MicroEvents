@@ -3,8 +3,6 @@ package io.github.microevents;
 import io.github.microevents.events.*;
 import io.github.microevents.util.IntPair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MicroEventHandler<E extends Event> implements EventHandler<E> {
 	// an array organized by priority of all of the listeners

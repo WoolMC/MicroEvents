@@ -20,7 +20,7 @@ dependencies {
     compile name: "lambda-factory-2.0.1"
     extraLibs name: "lambda-factory-2.0.1"
 
-    // faster data structures (Short2Object & Object2Short maps in MicroEventManager)
+    // faster data structures
     // https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
     compile "it.unimi.dsi:fastutil:8.3.0"
     extraLibs "it.unimi.dsi:fastutil:8.3.0"
