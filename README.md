@@ -1,5 +1,5 @@
 # MicroEvents
 
-Example
+Blazing fast event based programming, priorities, and support for inherited listeners/events
 
-https://github.com/WoolMC/MicroEvents/blob/master/src/test/java/examples/basic/mains/BasicExample.java
+Example: `https://github.com/WoolMC/MicroEvents/blob/master/src/test/java/examples/basic/mains/BasicExample.java`
