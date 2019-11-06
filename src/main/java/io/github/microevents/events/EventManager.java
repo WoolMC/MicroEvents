@@ -28,12 +28,13 @@ public interface EventManager {
 	/**
 	 * throws a new event in the event handler, thread-safe
 	 * @param event the object
+	 * @param <T> the event type
 	 */
 	<T extends Event> void invoke(T event);
 
 	/**
 	 * registers the event, must be called before any invocation, not thread-safe
-	 * @param eventClass
+	 * @param eventClass the event's class
 	 */
 	void registerEvent(Class<? extends Event> eventClass);
 

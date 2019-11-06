@@ -18,7 +18,7 @@ public class NodedList<E> extends AbstractList<E> {
 
 	/**
 	 * creates a new NodedList from the lists provided
-	 * @param combo
+	 * @param combo the lists that this will use
 	 */
 	public NodedList(List<List<E>> combo) {
 		this.combo = combo;

@@ -4,7 +4,7 @@ package io.github.microevents.events;
 /**
  * an event handler is responsible for executing its listeners for 1 event, it must obey the specified orders specified in
  * {@link Priority} and remove listeners correctly
- * @param <T>
+ * @param <T> the event type this handler handles
  */
 public interface EventHandler<T extends Event> {
 	/**
