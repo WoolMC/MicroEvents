@@ -24,7 +24,7 @@ public class MicroEventHandler<E extends Event> implements EventHandler<E> {
 		int flag = 1 << ordinal;
 		listeners[ordinal].add(new IntPair<>(listener, id));
 		hasAny |= flag;
-		if (subs(id)) hasSub |= flag;
+		if (((id >>> 15) & 1) == 1) hasSub |= flag;
 	}
 
 	@Override
@@ -41,25 +41,17 @@ public class MicroEventHandler<E extends Event> implements EventHandler<E> {
 		}
 	}
 
+	// it just works.
 	private boolean invoke(int priority, E event, boolean obeyCancelled, boolean sub) {
-		if ((!sub || (hasSub & (1 << priority)) != 0) && (hasAny & (1 << priority)) != 0)
+		if (!sub && (hasAny & 1 << priority) != 0 || (hasSub & 1 << priority) != 0 && (hasAny & 1 << priority) != 0)
 			if (event instanceof Cancellable) {
 				for (IntPair<Listener<E>> pair : listeners[priority])
 					if (((Cancellable) event).isCancelled() && obeyCancelled) break;
-					else if (!sub || subs(pair.b)) pair.a.accept(event);
+					else if (!sub || (pair.b >>> 15 & 1) == 1) pair.a.accept(event);
 				return ((Cancellable) event).isCancelled();
 			} else for (IntPair<Listener<E>> pair : listeners[priority])
 				pair.a.accept(event);
 		return false;
 	}
 
-	/**
-	 * checks if the listener listens to super classes
-	 *
-	 * @param sig
-	 * @return
-	 */
-	private static boolean subs(int sig) {
-		return ((sig >>> 15) & 1) == 1;
-	}
 }

@@ -8,6 +8,7 @@ import io.github.microevents.events.EventManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class StressTesting {
 	public static void main(String[] args) {
@@ -16,13 +17,14 @@ public class StressTesting {
 		manager.registerEvent(BasicEvent.class);
 		manager.registerEvent(SubBasicEvent.class);
 
-		manager.registerStaticEventListeners(StressTesting.class);
 
-		test(() -> manager.invoke(new SubBasicEvent()), "warmup");
+		test(() -> manager.registerEventListeners(new StressTesting()), "warmup list", 100);
+		test(() -> manager.invoke(new SubBasicEvent()), "warmup event", ITERATIONS);
 
-		test(() -> manager.invoke(new SubBasicEvent()), "sub test");
 
-		test(() -> manager.invoke(new BasicEvent("Hey!")), "nosub test");
+		test(() -> manager.invoke(new SubBasicEvent()), "sub test", ITERATIONS);
+
+		test(() -> manager.invoke(new BasicEvent("Hey!")), "nosub test", ITERATIONS);
 
 		// on my laptop
 
@@ -30,39 +32,28 @@ public class StressTesting {
 		// 1000000 iterations of  sub test took   39ms (39ns/op)
 		// 1000000 iterations of nosub tes took   77ms (77ns/op)
 
+		//550ms
+		//2805ms
 	}
 
 	private static final int ITERATIONS = 1_000_000;
-	public static <T> List<T> test(Supplier<T> supplier, String name) {
+
+	public static void test(Runnable runnable, String name, int iters) {
 		long start = System.nanoTime();
-
-		List<T> arr = new ObjectArrayList<>();
-		for(int x = 0; x < ITERATIONS; x++)
-			arr.add(supplier.get());
-		long elapsed = System.nanoTime()-start;
-
-		System.out.printf("%d iterations of %9.9s took %4dms (%dns/op)\n", ITERATIONS, name, elapsed/1_000_000, elapsed/ITERATIONS);
-		return arr;
-	}
-
-	public static void test(Runnable runnable, String name) {
-		long start = System.nanoTime();
-
-		for(int x = 0; x < ITERATIONS; x++)
+		for(int x = 0; x < iters; x++)
 			runnable.run();
 		long elapsed = System.nanoTime()-start;
+		System.out.printf("%d iterations of %9.9s took %4dms (%dns/op)\n", iters, name, elapsed/1_000_000, elapsed/iters);
 
-
-		System.out.printf("%d iterations of %9.9s took %4dms (%dns/op)\n", ITERATIONS, name, elapsed/1_000_000, elapsed/ITERATIONS);
 	}
 
 	@EventListener
-	public static void noSub(BasicEvent event) {
+	public void noSub(BasicEvent event) {
 		// do nothing, this is just an overhead test
 	}
 
 	@EventListener(subEvents = true)
-	public static void sub(BasicEvent event) {
+	public void sub(BasicEvent event) {
 		// same here
 	}
 

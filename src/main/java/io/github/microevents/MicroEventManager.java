@@ -11,13 +11,15 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.*;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.logging.Logger;
 
 /**
@@ -144,9 +146,9 @@ public class MicroEventManager implements EventManager {
 	/**
 	 * a map that gives the functions that take in an object's class and return it's listener registers
 	 */
-	private final InheritedMap<Object, Object2IntFunction<Object>> instanceMethods = new InheritedMap<>(Object.class, c -> {
+	private final InheritedMap<Object, ToIntFunction<Object>> instanceMethods = new InheritedMap<>(Object.class, c -> {
 		Method[] objects = c.getDeclaredMethods();
-		ObjectList<Object2IntFunction<Object>> declared = new ObjectArrayList<>();
+		ObjectList<ToIntFunction<Object>> declared = new ObjectArrayList<>();
 		for (Method method : objects)
 			if (!(Modifier.isStatic(method.getModifiers()) || Modifier.isAbstract(method.getModifiers()))) { // only for instance methods
 				EventListener listener = method.getAnnotation(EventListener.class);
@@ -156,7 +158,6 @@ public class MicroEventManager implements EventManager {
 						throw new IllegalArgumentException(method + " has " + params.length + " parameters! Should have 1!");
 					else if (!Event.class.isAssignableFrom(params[0]))
 						throw new IllegalArgumentException(method + " is trying to listen to " + params[0] + " which does not extend " + Event.class);
-
 					Lambda lambda = LambdaFactory.create(method); // for faster method invoke
 					declared.add(o -> registerListener((Class<? extends Event>) params[0], e -> lambda.invoke_for_void(o, e), listener.priority(), listener.subEvents()));
 					if (!Modifier.isFinal(method.getModifiers())) // TODO find a performant way to check for super methods
@@ -170,9 +171,9 @@ public class MicroEventManager implements EventManager {
 
 	@Override
 	public IntList registerEventListeners(Object object) {
-		NodedList<Object2IntFunction<Object>> map = instanceMethods.getAttributes(object.getClass());
+		NodedList<ToIntFunction<Object>> map = instanceMethods.getAttributes(object.getClass());
 		IntList list = new IntArrayList(map.size());
-		for (Object2IntFunction<Object> f : map)
+		for (ToIntFunction<Object> f : map)
 			list.add(f.applyAsInt(object));
 		return list;
 	}
@@ -219,6 +220,4 @@ public class MicroEventManager implements EventManager {
 	private Class<? extends Event> getEvent(int sig) {
 		return keyEvents.get((short) ((sig >>> 3) & MAX_EVENTS));
 	}
-
-
 }
